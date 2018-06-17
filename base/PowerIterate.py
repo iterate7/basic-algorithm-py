@@ -10,8 +10,8 @@ import numpy as np
 
 
 class PowIteration:
-    @staticmethod
-    def power_iteration(matrix, num_simulations):
+
+    def power_iteration(self, matrix, num_simulations):
         """
         algorithm:
         1. Ideally choose a random vector To decrease the chance that our vector
