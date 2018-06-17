@@ -1,34 +1,52 @@
 #!/usr/bin/python
+"""
+url: http://mlwiki.org/index.php/Power_Iteration
+
+this class implements power iteration, which use for decomposition of matrix.
+
+"""
 
 import numpy as np
 
 
-def power_iteration(A, num_simulations):
-    # Ideally choose a random vector
-    # To decrease the chance that our vector
-    # Is orthogonal to the eigenvector
-    b_k = np.random.rand(A.shape[0])
+class PowIteration:
+    @staticmethod
+    def power_iteration(matrix, num_simulations):
+        """
+        algorithm:
+        1. Ideally choose a random vector To decrease the chance that our vector
+        2. get the vector of  vector dot matrix
+        3. many iteration to decide the vector Is orthogonal to the eigenvector
+        :param matrix:
+        :param num_simulations:
+        :return:
+        """
+        b_k = np.random.rand(matrix.shape[0])
+        for _ in range(num_simulations):
+            # calculate the matrix-by-vector product Ab
+            b_k1 = np.dot(matrix, b_k)
 
-    for _ in range(num_simulations):
-        # calculate the matrix-by-vector product Ab
-        b_k1 = np.dot(A, b_k)
+            # calculate the norm
+            b_k1_norm = np.linalg.norm(b_k1)
 
-        # calculate the norm
-        b_k1_norm = np.linalg.norm(b_k1)
+            # re normalize the vector
+            b_k = b_k1 / b_k1_norm
+        return b_k
 
-        # re normalize the vector
-        b_k = b_k1 / b_k1_norm
 
-    return b_k
+def main():
+    instance = PowIteration()
+    matrix_input = np.array([[0.5, 0.5], [0.2, 0.8]])
+    b_k = instance.power_iteration(matrix_input, 10)
+    print("matrix", matrix_input)
+    print("eigenvector:", b_k)
+    print("eigenvalue:", b_k.dot(np.dot(matrix_input, b_k)))
 
-matrix = np.array([[0.5, 0.5], [0.2, 0.8]])
+    # use the linalg for validate
+    eigen_value, eigen_vector = np.linalg.eig(matrix_input)
+    print("egvalueBaseLinalg:", eigen_value, eigen_vector)
 
-b_k = power_iteration(matrix, 10)
-print("matrix",matrix)
-print("egvector:",b_k)
-print("egvalue:",b_k.dot(np.dot(matrix, b_k)) )
 
-egvalue,egvector = np.linalg.eig(matrix)
-print("egvalueBaseLinalg:",egvalue,egvector)
+if __name__ == '__main__':
+    main()
 
-#http://mlwiki.org/index.php/Power_Iteration
